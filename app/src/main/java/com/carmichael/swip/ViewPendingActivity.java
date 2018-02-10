@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.carmichael.swip.Models.TradeItem;
+import com.carmichael.swip.Services.ImageServices;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -106,10 +107,7 @@ public class ViewPendingActivity extends Activity {
         String location = "TradeItems/" + theirItem.getItemId();
         StorageReference ref = storageRef.child(location);
 
-        Glide.with(this)
-                .using(new FirebaseImageLoader())
-                .load(ref)
-                .into(imgMyItem);
+        ImageServices.setImageWithGlide(this,ref,imgMyItem);
 
         tvTitle.setVisibility(View.VISIBLE);
         tvItemName.setVisibility(View.VISIBLE);

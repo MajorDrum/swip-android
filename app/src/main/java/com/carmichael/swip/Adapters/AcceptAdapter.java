@@ -184,6 +184,7 @@ public class AcceptAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder>
                                                         myItemRef.child("outMarket").setValue(theirItem.getItemId());
                                                         theirItemRef.child("outMarket").setValue(myItem.getItemId());
                                                         Intent intent = new Intent(context, ProcessActivity.class);
+                                                        intent.putExtra("User",user);
                                                         intent.putExtra("MyItemKey", myItem.getItemId());
                                                         intent.putExtra("TheirItemKey", theirItem.getItemId());
                                                         context.startActivity(intent);

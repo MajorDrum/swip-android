@@ -56,11 +56,12 @@ public class OffersFragment extends Fragment {
         return view;
     }
 
-    public static OffersFragment newInstance(int exampleInt) {
+    public static OffersFragment newInstance(int exampleInt, User user) {
         OffersFragment fragment = new OffersFragment();
 
         Bundle args = new Bundle();
         args.putInt("iItem", exampleInt);
+        args.putParcelable("User",user);
         fragment.setArguments(args);
 
         return fragment;
@@ -70,7 +71,9 @@ public class OffersFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         iItem = getArguments().getInt("iItem");
+        user = getArguments().getParcelable("User");
 
+        Log.d(TAG, "onActivityCreated: second attempt at user: " + user.toString());
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -88,13 +91,15 @@ public class OffersFragment extends Fragment {
 
         final DatabaseReference userRef = mDatabase.child("Users").child(fUser.getUid());
 
-        user = new User();
+
+
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
                 userReady = true;
+                user = getArguments().getParcelable("User");
                 if(userReady && itemsReady){
                     BeginActivity();
                 }
@@ -136,19 +141,13 @@ public class OffersFragment extends Fragment {
     }
 
     public void BeginActivity(){
-//        for(int i = 0; i < user.getItemKeyStrings().size(); i++){
-//            for(int i2 = 0; i2 < tradeItems.size(); i2++){
-//                if(user.getItemKeyStrings().get(i).equals(tradeItems.get(i2).getItemId())){
-//                    user.myItems.add(tradeItems.get(i2));
-//                }
-//            }
-//        }
 
+        Log.d(TAG, "onActivityCreated: bundle user is: " + user.toString());
         user.setMyItems(myItems);
 
         Log.d(TAG, "BeginActivity: my item is: " + user.getMyItems().get(iItem).toString());
 
-        matchAdapter = new MatchAdapter(user.getMyItems().get(iItem), getActivity());
+        matchAdapter = new MatchAdapter(user.getMyItems().get(iItem), getActivity(), user);
 
         tvNoOfferMessage = (TextView) view.findViewById(R.id.tvNoOfferMessage);
         tvNoOfferMessage.setVisibility(View.GONE);
@@ -160,13 +159,6 @@ public class OffersFragment extends Fragment {
         tvPoints.setText(Html.fromHtml("Your points: <b>" + user.getPoints() + "</b>"));
 
         tvYourOffers = (TextView) view.findViewById(R.id.tvYourOffers);
-
-//        btnReturnToTrade.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onBackPressed();
-//            }
-//        });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

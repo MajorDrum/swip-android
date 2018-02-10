@@ -2,6 +2,7 @@ package com.carmichael.swip;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -12,7 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.carmichael.swip.Contracts.APIContract;
 import com.carmichael.swip.Models.TradeItem;
+import com.carmichael.swip.Models.User;
+import com.carmichael.swip.Services.FirebaseServices;
+import com.carmichael.swip.Services.ImageServices;
+import com.carmichael.swip.Services.WebServices;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
 
 import static android.content.ContentValues.TAG;
 
@@ -33,77 +40,50 @@ public class ReviewOfferActivity extends Activity {
     private Button btnAcceptOffer;
     private TradeItem myItem;
     private TradeItem theirItem;
-    boolean myItemReady = false;
-    boolean theirItemReady = false;
-    private String myItemKey;
-    private String theirItemKey;
-    private DatabaseReference myItemRef;
-    private DatabaseReference theirItemRef;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_offer);
 
+        initView();
+
+        String myItemKey = getIntent().getStringExtra("MyItemKey");
+        String theirItemKey = getIntent().getStringExtra("TheirItemKey");
+        user = getIntent().getParcelableExtra("User");
+
+        String myJson = null;
+        String theirJson = null;
+
+        try{
+            myJson = new RetrieveJsonTask().execute(APIContract.URL_DATABASE_TRADEITEMS+myItemKey,user.getToken()).get();
+            theirJson = new RetrieveJsonTask().execute(APIContract.URL_DATABASE_TRADEITEMS+theirItemKey,user.getToken()).get();
+        }catch(Exception e){
+            Log.e(TAG, "onCreate: unable to retrieve json", e);
+        }
+
+        myItem = FirebaseServices.convertJsonToTradeItem(myItem, myJson, myItemKey);
+        theirItem = FirebaseServices.convertJsonToTradeItem(theirItem,theirJson,theirItemKey);
+
+        beginActivity();
+    }
+
+    public void initView(){
         this.setFinishOnTouchOutside(true);
-
-
         tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvItemName = (TextView) findViewById(R.id.tvItemName);
         tvItemDescription = (TextView) findViewById(R.id.tvItemDescription);
         imgMyItem = (ImageView) findViewById(R.id.imgMyItem);
         btnAcceptOffer = (Button) findViewById(R.id.btnAcceptOffer);
-
         tvTitle.setVisibility(View.INVISIBLE);
         tvItemName.setVisibility(View.INVISIBLE);
         tvItemDescription.setVisibility(View.INVISIBLE);
         imgMyItem.setVisibility(View.INVISIBLE);
         btnAcceptOffer.setVisibility(View.INVISIBLE);
-
-        myItemKey = getIntent().getStringExtra("MyItemKey");
-        theirItemKey = getIntent().getStringExtra("TheirItemKey");
-
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        myItemRef = mDatabase.child("TradeItems").child(myItemKey);
-        theirItemRef = mDatabase.child("TradeItems").child(theirItemKey);
-
-        myItemRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                myItem = dataSnapshot.getValue(TradeItem.class);
-                myItem.setItemId(dataSnapshot.getKey());
-                myItemReady = true;
-                if(myItemReady && theirItemReady){
-                    BeginActivity();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        theirItemRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                theirItem = dataSnapshot.getValue(TradeItem.class);
-                theirItem.setItemId(dataSnapshot.getKey());
-                theirItemReady = true;
-                if(myItemReady && theirItemReady){
-                    BeginActivity();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
-    public void BeginActivity(){
-
+    public void beginActivity(){
         tvTitle.setText(Html.fromHtml("<b>"+theirItem.getName()+"</b>" + " for " + "<b>"+myItem.getName()+"</b>"));
         tvItemName.setText(theirItem.getName());
         tvItemDescription.setText(theirItem.getDescription());
@@ -113,40 +93,20 @@ public class ReviewOfferActivity extends Activity {
         String location = "TradeItems/" + theirItem.getItemId();
         StorageReference ref = storageRef.child(location);
 
-        Glide.with(this)
-                .using(new FirebaseImageLoader())
-                .load(ref)
-                .into(imgMyItem);
+        ImageServices.setImageWithGlide(this,ref,imgMyItem);
 
         tvTitle.setVisibility(View.VISIBLE);
         tvItemName.setVisibility(View.VISIBLE);
         tvItemDescription.setVisibility(View.VISIBLE);
         imgMyItem.setVisibility(View.VISIBLE);
         btnAcceptOffer.setVisibility(View.VISIBLE);
+    }
 
-//        if(theirItem.getHashMapKeysAsStrings(theirItem.getMatches()).contains(myItem.getItemId())){
-//            btnAcceptOffer.setText("NULL");
-//        }else{
-
-
-//            btnAcceptOffer.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    myItemRef.child("offers").child(theirItemKey).removeValue();
-//                    if(theirItem.getHashMapKeysAsStrings(theirItem.getPending()).contains(myItemKey)){
-//                        myItemRef.child("matches").child(theirItemKey).setValue("true");
-//                        theirItemRef.child("matches").child(myItemKey).setValue("true");
-//                        theirItemRef.child("pending").child(myItemKey).removeValue();
-//                    }else{
-//                        myItemRef.child("pending").child(theirItemKey).setValue("true");
-//                        theirItemRef.child("matches").child(myItemKey).setValue("true");
-//                    }
-//                    onBackPressed();
-//                }
-//            });
-
-
-//        }
-
+    private class RetrieveJsonTask extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            String json = WebServices.getFirebaseJson(params[0],params[1]);
+            return json;
+        }
     }
 }

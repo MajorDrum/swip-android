@@ -21,6 +21,7 @@ import com.carmichael.swip.Services.BitmapRetriever;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -53,30 +54,53 @@ public class User implements Parcelable {
     private String phone;
     private HashMap<String, Object> tradeItems;
     private FirebaseUser firebase;
+    private String token;
 
 
 
     public User() {
         myItems = new ArrayList<>();
+        firebase = FirebaseAuth.getInstance().getCurrentUser();
+        userId = firebase.getUid();
+        firstName = firebase.getDisplayName().split(" ")[0];
+        lastName = firebase.getDisplayName().split(" ")[1];
     }
 
     protected User(Parcel in) {
+        userId = in.readString();
+        firstName = in.readString();
+        lastName = in.readString();
         myItems = in.createTypedArrayList(TradeItem.CREATOR);
         points = in.readInt();
         zipcode = in.readString();
         myOffers = in.createTypedArrayList(Offer.CREATOR);
         currentTradeItem = in.readString();
         phone = in.readString();
+        token = in.readString();
+        firebase = FirebaseAuth.getInstance().getCurrentUser();
     }
+
+    public void initFirebase(){
+
+        firebase = FirebaseAuth.getInstance().getCurrentUser();
+        userId = firebase.getUid();
+        firstName = firebase.getDisplayName().split(" ")[0];
+        lastName = firebase.getDisplayName().split(" ")[1];
+    }
+
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userId);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
         dest.writeTypedList(myItems);
         dest.writeInt(points);
         dest.writeString(zipcode);
         dest.writeTypedList(myOffers);
         dest.writeString(currentTradeItem);
         dest.writeString(phone);
+        dest.writeString(token);
     }
 
     @Override
@@ -99,6 +123,9 @@ public class User implements Parcelable {
     @Override
     public String toString() {
         return "User{" +
+                "userId='" + userId + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", myItems=" + myItems +
                 ", points=" + points +
                 ", zipcode='" + zipcode + '\'' +
@@ -106,6 +133,7 @@ public class User implements Parcelable {
                 ", currentTradeItem='" + currentTradeItem + '\'' +
                 ", phone='" + phone + '\'' +
                 ", tradeItems=" + tradeItems +
+                ", token='" + token + '\'' +
                 '}';
     }
 
@@ -115,6 +143,14 @@ public class User implements Parcelable {
 
     public void setFirebase(FirebaseUser firebase) {
         this.firebase = firebase;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getFirstName() {

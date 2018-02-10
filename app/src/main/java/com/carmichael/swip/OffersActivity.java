@@ -106,6 +106,7 @@ public class OffersActivity extends AppCompatActivity {
                 user = dataSnapshot.getValue(User.class);
                 Log.d(TAG, "onDataChange: user added");
 
+                user = getIntent().getParcelableExtra("User");
                 mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
                 mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -116,6 +117,8 @@ public class OffersActivity extends AppCompatActivity {
                 tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
                 tabLayout.setupWithViewPager(mViewPager);
+
+                Log.d(TAG, "onDataChange: intent attempt at user: " + getIntent().getParcelableExtra("User").toString());
 
             }
 
@@ -144,7 +147,11 @@ public class OffersActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch(position){
                 case 0:
-                    OffersFragment offersFragment = OffersFragment.newInstance(iCurrentTradeItem);
+                    Log.d(TAG, "getItem: first attempt at user: " + user.toString());
+                    OffersFragment offersFragment = OffersFragment.newInstance(iCurrentTradeItem, user);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putParcelable("User",user);
+//                    offersFragment.setArguments(bundle);
                     return offersFragment;
 //                case 1:
 //                    PendingFragment pendingFragment = PendingFragment.newInstance(iCurrentTradeItem);
@@ -253,6 +260,7 @@ public class OffersActivity extends AppCompatActivity {
                                                         myItemRef.child("outMarket").setValue(theirItem.getItemId());
                                                         theirItemRef.child("outMarket").setValue(myItem.getItemId());
                                                         Intent intent = new Intent(context, ProcessActivity.class);
+                                                        intent.putExtra("User",user);
                                                         intent.putExtra("MyItemKey", myItem.getItemId());
                                                         intent.putExtra("TheirItemKey", theirItem.getItemId());
                                                         startActivity(intent);

@@ -136,6 +136,7 @@ public class ConfirmTradeActivity extends Activity {
                                 myItemRef.child("outMarket").setValue(theirItem.getItemId());
                                 theirItemRef.child("outMarket").setValue(myItem.getItemId());
                                 Intent intent = new Intent(ConfirmTradeActivity.this, ProcessActivity.class);
+                                intent.putExtra("User",user);
                                 intent.putExtra("MyItemKey", myItem.getItemId());
                                 intent.putExtra("TheirItemKey", theirItem.getItemId());
                                 startActivity(intent);

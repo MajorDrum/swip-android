@@ -16,6 +16,7 @@ import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.Models.User;
 import com.carmichael.swip.MyItemsActivity;
 import com.carmichael.swip.R;
+import com.carmichael.swip.Services.ImageServices;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -67,10 +68,7 @@ public class MyItemsAdapter extends RecyclerView.Adapter<MyItemsAdapter.ViewHold
             StorageReference storageRef = storage.getReference();
             String location = "TradeItems/" + currentItem.getItemId();
             StorageReference ref = storageRef.child(location);
-            Glide.with(context)
-                    .using(new FirebaseImageLoader())
-                    .load(ref)
-                    .into(holder.imgMyItem);
+            ImageServices.setImageWithGlide(context,ref,holder.imgMyItem);
         }catch (Exception e){
             Log.e(TAG, "getView: error is: " + e.getStackTrace());
         }

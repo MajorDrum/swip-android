@@ -14,8 +14,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.carmichael.swip.Models.TradeItem;
+import com.carmichael.swip.Models.User;
 import com.carmichael.swip.ReviewOfferActivity;
 import com.carmichael.swip.R;
+import com.carmichael.swip.Services.ImageServices;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,10 +41,12 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder>{
     private Context context;
     private TradeItem currentItem;
     private ArrayList<TradeItem> matchItems = new ArrayList<>();
+    private User user;
 
-    public MatchAdapter(TradeItem tradeItem, Context context) {
+    public MatchAdapter(TradeItem tradeItem, Context context, User user) {
         this.tradeItem = tradeItem;
         this.context = context;
+        this.user = user;
     }
 
     @Override
@@ -77,10 +81,7 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder>{
                     StorageReference ref = storageRef.child(location);
                     Log.d(TAG, "onClick: item id is: " + currentItem.getItemId());
 
-                    Glide.with(context)
-                            .using(new FirebaseImageLoader())
-                            .load(ref)
-                            .into(holder.imgOfferItem);
+                    ImageServices.setImageWithGlide(context,ref,holder.imgOfferItem);
                 }
             }
 
@@ -96,6 +97,8 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder>{
                 Intent intent = new Intent(context, ReviewOfferActivity.class);
                 intent.putExtra("TheirItemKey", matchItems.get(position).getItemId());
                 intent.putExtra("MyItemKey", tradeItem.getItemId());
+                Log.d(TAG, "onClick: user on press is: " + user.toString());
+                intent.putExtra("User",user);
                 context.startActivity(intent);
             }
         });

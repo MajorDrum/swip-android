@@ -47,7 +47,7 @@ public class TestActivity extends AppCompatActivity {
     private class TokenTask extends AsyncTask<String, String, String>{
         @Override
         protected String doInBackground(String... params) {
-            String json = WebServices.getFirebaseJson(APIContract.URL_DATABASE_BEG+"TradeItems/-KtK-BUQCOHt0oZwLf8h",token);
+            String json = WebServices.getFirebaseJson(APIContract.URL_DATABASE +"TradeItems/-KtK-BUQCOHt0oZwLf8h",token);
             return json;
         }
     }

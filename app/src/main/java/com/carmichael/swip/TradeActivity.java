@@ -31,6 +31,7 @@ import com.carmichael.swip.Adapters.TradeItemAdapter;
 import com.carmichael.swip.Contracts.APIContract;
 import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.Models.User;
+import com.carmichael.swip.Services.FirebaseServices;
 import com.carmichael.swip.Services.ImageServices;
 import com.carmichael.swip.Services.WebServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,16 +43,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 
 
@@ -80,9 +75,6 @@ public class TradeActivity extends AppCompatActivity {
     private DatabaseReference userRef;
     private ConstraintLayout constraintLoading;
     private ProgressBar spinnerLoading;
-    private String token;
-
-    String ENDPOINT = "https://api.myjson.com/bins/147n0l";
 
 
     @Override
@@ -96,36 +88,21 @@ public class TradeActivity extends AppCompatActivity {
         user.getFirebase().getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
             @Override
             public void onComplete(@NonNull Task<GetTokenResult> task) {
-                token = task.getResult().getToken();
+                String token = task.getResult().getToken();
                 try{
                     Gson gson = new Gson();
 
                     // Get user
-                    String url = String.format(APIContract.URL_DATABASE_BEG+"/%s/%s",
-                                                    "Users",
-                                                    user.getFirebase().getUid());
+                    String url = APIContract.URL_DATABASE_USERS +  user.getFirebase().getUid();
                     String json = new RetrieveJsonTask().execute(url,token).get();
                     user = gson.fromJson(json,User.class);
-                    user.setFirebase(mAuth.getCurrentUser());
+                    user.initFirebase();
+                    user.setToken(token);
 
                     // Get ALL TradeItems
-                    url = String.format(APIContract.URL_DATABASE_BEG+"/%s",
-                                                "TradeItems");
-                    json = new RetrieveJsonTask().execute(url,token).get();
+                    json = new RetrieveJsonTask().execute(APIContract.URL_DATABASE_TRADEITEMS,token).get();
 
-                    // Firebase returns a JSON object instead of array, so we have to manually
-                    // convert it
-                    JSONObject jsonObject = new JSONObject(json);
-                    Iterator x = jsonObject.keys();
-                    JSONArray jsonArray = new JSONArray();
-
-                    while (x.hasNext()){
-                        String key = (String) x.next();
-                        JSONObject toPut = new JSONObject(jsonObject.get(key).toString());
-                        toPut.put("itemId",key);
-                        jsonArray.put(toPut);
-                    }
-                    tradeItems = gson.fromJson(jsonArray.toString(), new TypeToken<List<TradeItem>>(){}.getType());
+                    tradeItems = FirebaseServices.convertTradeItemJsonToArray(tradeItems,json);
 
                     // Load items into user
                     for(TradeItem tradeItem : tradeItems){
@@ -150,8 +127,6 @@ public class TradeActivity extends AppCompatActivity {
     }
 
     public void beginTrading(){
-        Log.d(TAG, "beginTrading: starts");
-
         initTradingView();
 
         // Set currentTradeItem to first item if there is none set
@@ -211,7 +186,6 @@ public class TradeActivity extends AppCompatActivity {
         imgMyItem.setVisibility(View.GONE);
         mAuth = FirebaseAuth.getInstance();
         user = new User();
-        user.setFirebase(mAuth.getCurrentUser());
         tvOfferSent.setVisibility(View.GONE);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         userRef = mDatabase.child("Users").child(user.getFirebase().getUid());
@@ -326,15 +300,15 @@ public class TradeActivity extends AppCompatActivity {
         DatabaseReference mDatabase = database.getReference();
         TradeItem currentItem = tradeItems.get(flipperTradeItems.getDisplayedChild());
         String currentItemId = currentItem.getItemId();
-        mDatabase.child("TradeItems").child(currentItemId).child("offers").child(user.getCurrentTradeItem()).setValue("true");
+        mDatabase.child("TradeItems").child(currentItemId).child("offers").child(user.getCurrentTradeItem()).setValue(true);
 
         if(user.getMyItems().get(iCurrentTradeItem)
                 .getHashMapKeysAsStrings(user.getMyItems()
                         .get(iCurrentTradeItem).getOffers()).contains(currentItemId)){
             mDatabase.child("TradeItems").child(user.getCurrentTradeItem())
-                    .child("matches").child(currentItemId).setValue("true");
+                    .child("matches").child(currentItemId).setValue(true);
             mDatabase.child("TradeItems").child(currentItemId)
-                    .child("matches").child(user.getCurrentTradeItem()).setValue("true");
+                    .child("matches").child(user.getCurrentTradeItem()).setValue(true);
         }
 
         displayOfferSent();
@@ -378,10 +352,12 @@ public class TradeActivity extends AppCompatActivity {
             case R.id.offer_menu:
                 if(user.getMyItems().get(iCurrentTradeItem).getOutMarket() == null){
                     Intent intent = new Intent(TradeActivity.this, OffersActivity.class);
+                    intent.putExtra("User",user);
                     intent.putExtra("iCurrentTradeItem", iCurrentTradeItem);
                     startActivity(intent);
                 }else{
                     Intent intent = new Intent(TradeActivity.this, ProcessActivity.class);
+                    intent.putExtra("User",user);
                     intent.putExtra("MyItemKey", user.getMyItems().get(iCurrentTradeItem).getItemId());
                     intent.putExtra("TheirItemKey", user.getMyItems().get(iCurrentTradeItem).getOutMarket());
                     startActivity(intent);
@@ -455,12 +431,10 @@ public class TradeActivity extends AppCompatActivity {
             if (e1.getX() > e2.getX()) {
                 deny();
             }
-
             // Swipe right (previous)
             if (e1.getX() < e2.getX()) {
                 accept();
             }
-
             return super.onFling(e1, e2, velocityX, velocityY);
         }
     }

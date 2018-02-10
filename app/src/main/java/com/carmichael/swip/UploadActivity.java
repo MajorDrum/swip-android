@@ -205,7 +205,7 @@ public class UploadActivity extends AppCompatActivity {
                         tradeItemUpdates.put("/TradeItems/" + key, postValues);
 
 
-                        mDatabase.child("Users").child(fUser.getUid()).child("tradeItems").child(key).setValue("true");
+                        mDatabase.child("Users").child(fUser.getUid()).child("tradeItems").child(key).setValue(true);
                         mDatabase.updateChildren(tradeItemUpdates);
 
 

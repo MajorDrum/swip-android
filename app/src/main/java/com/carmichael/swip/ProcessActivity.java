@@ -147,7 +147,7 @@ public class ProcessActivity extends AppCompatActivity {
                     myItemRef.child("matches").removeValue();
                     myItemRef.child("userId").setValue(otherUser.getUserId());
                     userRef.child("tradeItems").child(myItem.getItemId()).removeValue();
-                    userRef.child("tradeItems").child(theirItem.getItemId()).setValue("true");
+                    userRef.child("tradeItems").child(theirItem.getItemId()).setValue(true);
                     userRef.child("currentTradeItem").setValue(theirItem.getItemId());
 
                     theirItemRef.child("outMarket").removeValue();
@@ -156,12 +156,12 @@ public class ProcessActivity extends AppCompatActivity {
                     theirItemRef.child("matches").removeValue();
                     theirItemRef.child("userId").setValue(fUser.getUid());
                     otherUserRef.child("tradeItems").child(theirItem.getItemId()).removeValue();
-                    otherUserRef.child("tradeItems").child(myItem.getItemId()).setValue("true");
+                    otherUserRef.child("tradeItems").child(myItem.getItemId()).setValue(true);
                     otherUserRef.child("currentTradeItem").setValue(myItem.getItemId());
 
                     onBackPressed();
                 }else{
-                    myItemRef.child("tradeComplete").setValue("true");
+                    myItemRef.child("tradeComplete").setValue(true);
                     btnProcessConfirm.setText("Waiting for response");
                     btnProcessConfirm.setClickable(false);
                 }

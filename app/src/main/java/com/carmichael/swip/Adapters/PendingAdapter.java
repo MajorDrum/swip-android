@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.R;
+import com.carmichael.swip.Services.ImageServices;
 import com.carmichael.swip.ViewPendingActivity;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DataSnapshot;
@@ -76,10 +77,7 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.ViewHold
                     StorageReference ref = storageRef.child(location);
                     Log.d(TAG, "onClick: item id is: " + currentItem.getItemId());
 
-                    Glide.with(context)
-                            .using(new FirebaseImageLoader())
-                            .load(ref)
-                            .into(holder.imgOfferItem);
+                    ImageServices.setImageWithGlide(context,ref,holder.imgOfferItem);
                 }
             }
 
