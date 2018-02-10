@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "208347661442",
+    "firebase_url": "https://swip-50128.firebaseio.com",
+    "project_id": "swip-50128",
+    "storage_bucket": "swip-50128.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208347661442:android:f2b711f22a428748",
+        "android_client_info": {
+          "package_name": "com.carmichael.swip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "208347661442-t57rab4f36eod2h6oq807vg04meo1h48.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkxse36LfWRgfLsutbv36HwdwlbhJ848I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

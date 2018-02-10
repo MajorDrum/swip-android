@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="5dp"
+        android:textColor="@android:color/black"
+        android:text="Item Name" />
+
+
+    <EditText
+        android:id="@+id/etItemName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:ems="10"
+        android:inputType="textPersonName|textCapSentences"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="5dp"
+        android:textColor="@android:color/black"
+        android:text="Item Description" />
+
+
+    <EditText
+        android:id="@+id/etItemDescription"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:ems="10"
+        android:gravity="top|left"
+        android:inputType="textMultiLine|textCapSentences"/>
+
+    <TextView
+        android:id="@+id/tvUploadImage"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:src="@mipmap/ic_camera"
+        android:gravity="center"
+        android:text="Upload an Image"
+        android:textSize="28dp"
+        android:background="@drawable/view_border"
+        android:textAlignment="center"/>
+
+    <ImageView
+        android:id="@+id/imgUploadImage"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:src="@mipmap/ic_camera"
+        android:background="@drawable/view_border"
+        android:layout_gravity="center"/>
+
+</LinearLayout>
+
+

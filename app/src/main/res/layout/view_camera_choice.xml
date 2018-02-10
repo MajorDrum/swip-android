@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Button
+        android:id="@+id/loadimage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:padding="5dp"
+        android:background="@drawable/selector_green"
+        android:textColor="@android:color/white"
+        android:text="Choose a Picture"
+        />
+
+    <Button
+        android:id="@+id/takeimage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:padding="5dp"
+        android:background="@drawable/selector_positive"
+        android:textColor="@android:color/white"
+        android:text="Take a new Picture"
+        />
+
+</LinearLayout>

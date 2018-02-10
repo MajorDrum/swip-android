@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res/android">
+    <item app:title="Offers"
+        android:showAsAction="never"
+        app:id="@+id/offer_menu"/>
+    <item app:title="Cash Out"
+        android:showAsAction="never"
+        app:id="@+id/cash_out"/>
+    <item app:title="Upload an Item"
+        android:showAsAction="never"
+        app:id="@+id/upload_item"/>
+    <item app:title="Manage Items"
+        android:showAsAction="never"
+        app:id="@+id/manage_items"/>
+    <item app:title="Test"
+        android:showAsAction="never"
+        app:id="@+id/menu_test"/>
+</menu>

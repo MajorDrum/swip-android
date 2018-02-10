@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    tools:context="com.carmichael.swip.TradeActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/constraint_loading">
+
+        <ProgressBar
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            android:id="@+id/spinner_loading"
+            app:layout_constraintVertical_bias="0.5" />
+    </android.support.constraint.ConstraintLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        tools:context="com.carmichael.swip.TradeActivity">
+
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:background="#ffffff"
+            android:id="@+id/constraint_flipper">
+
+            <AdapterViewFlipper
+                android:id="@+id/flipperTradeItems"
+                android:layout_width="wrap_content"
+                android:foregroundGravity="center"
+                android:paddingRight="3dp"
+                android:paddingLeft="3dp"
+                android:layout_height="180dp"
+                android:textAlignment="center"
+                android:layout_marginRight="8dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="40dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="40dp"
+                app:layout_constraintHorizontal_weight="0.5"
+                app:layout_constraintVertical_weight="0.5"/>
+
+            <TextView
+                android:id="@+id/tvOfferSent"
+                android:layout_width="239dp"
+                android:layout_height="130dp"
+                android:background="@color/colorAccent"
+                android:gravity="center"
+                android:padding="20dp"
+                android:layout_margin="20dp"
+                android:text="OFFER SENT!"
+                android:rotation="27"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="35dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/flipperTradeItems"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="8dp"
+                app:layout_constraintRight_toRightOf="@+id/flipperTradeItems"
+                app:layout_constraintTop_toTopOf="@+id/flipperTradeItems"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/flipperTradeItems"
+
+                app:layout_constraintHorizontal_weight="0.5"
+                app:layout_constraintVertical_weight="0.5"/>
+
+
+        </android.support.constraint.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/tvGradient"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_weight="0.05"
+            android:visibility="invisible"
+            android:background="@drawable/selector_gradient" />
+
+        <TextView
+            android:id="@+id/tvTradeItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trade Item"
+            android:textSize="20dp"
+            android:padding="10dp"
+            android:layout_weight="0.1"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:textColor="@android:color/black" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnDeny"
+                android:layout_width="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="No thanks!"
+                android:textStyle="bold"
+                android:background="@drawable/selector_negative"
+                android:textColor="@android:color/white"/>
+
+            <Button
+                android:id="@+id/btnAccept"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="0.5"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="Interested!"
+                android:textStyle="bold"
+                android:background="@drawable/selector_positive"
+                android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_weight="0.1" />
+
+        <ImageView
+            android:id="@+id/imgMyItem"
+            android:layout_width="63dp"
+            android:layout_height="63dp"
+            android:layout_weight="0.1"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/tvMyItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_weight="0.1"
+            android:layout_marginTop="14dp"
+            android:text="My Item"
+            android:textSize="16dp"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center"
+            android:layout_marginBottom="14dp"/>
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+</LinearLayout>
