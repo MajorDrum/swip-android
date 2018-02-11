@@ -17,10 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".TradeActivity"
+            android:name=".Activities.TradeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".Activities.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,29 +29,29 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UploadActivity"
+            android:name=".Activities.UploadActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".SignInActivity" />
-        <activity android:name=".NewAccountActivity" />
-        <activity android:name=".MyItemsActivity" />
+        <activity android:name=".Activities.SignInActivity" />
+        <activity android:name=".Activities.NewAccountActivity" />
+        <activity android:name=".Activities.MyItemsActivity" />
         <activity
-            android:name=".ReviewOfferActivity"
+            android:name=".Activities.ReviewOfferActivity"
             android:excludeFromRecents="true"
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
         <activity
-            android:name=".OffersActivity"
+            android:name=".Activities.OffersActivity"
             android:label="@string/title_activity_offers_beta"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ConfirmTradeActivity"
+            android:name=".Activities.ConfirmTradeActivity"
             android:excludeFromRecents="true"
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
-        <activity android:name=".ProcessActivity" />
+        <activity android:name=".Activities.ProcessActivity" />
         <activity
-            android:name=".ViewPendingActivity"
+            android:name=".Activities.ViewPendingActivity"
             android:excludeFromRecents="true"
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
-        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".Activities.TestActivity"></activity>
     </application>
 
 </manifest>

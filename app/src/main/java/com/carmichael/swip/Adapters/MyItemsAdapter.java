@@ -11,13 +11,11 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 
-import com.bumptech.glide.Glide;
 import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.Models.User;
-import com.carmichael.swip.MyItemsActivity;
+import com.carmichael.swip.Activities.MyItemsActivity;
 import com.carmichael.swip.R;
 import com.carmichael.swip.Services.ImageServices;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 

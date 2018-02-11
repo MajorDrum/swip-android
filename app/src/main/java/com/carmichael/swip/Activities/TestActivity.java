@@ -1,4 +1,4 @@
-package com.carmichael.swip;
+package com.carmichael.swip.Activities;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.carmichael.swip.Contracts.APIContract;
+import com.carmichael.swip.R;
 import com.carmichael.swip.Services.WebServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

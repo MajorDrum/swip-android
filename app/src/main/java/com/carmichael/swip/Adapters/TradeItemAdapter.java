@@ -1,13 +1,6 @@
 package com.carmichael.swip.Adapters;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,15 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.bumptech.glide.Glide;
 import com.carmichael.swip.Models.TradeItem;
-import com.carmichael.swip.Services.BitmapRetriever;
 import com.carmichael.swip.Services.ImageServices;
-import com.carmichael.swip.TradeActivity;
+import com.carmichael.swip.Activities.TradeActivity;
 import com.carmichael.swip.R;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 

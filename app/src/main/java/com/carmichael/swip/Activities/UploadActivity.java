@@ -1,4 +1,4 @@
-package com.carmichael.swip;
+package com.carmichael.swip.Activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -15,7 +15,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,11 +30,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carmichael.swip.Models.TradeItem;
+import com.carmichael.swip.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;

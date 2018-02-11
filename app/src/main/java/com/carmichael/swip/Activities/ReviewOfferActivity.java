@@ -1,4 +1,4 @@
-package com.carmichael.swip;
+package com.carmichael.swip.Activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -16,8 +16,10 @@ import com.bumptech.glide.Glide;
 import com.carmichael.swip.Contracts.APIContract;
 import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.Models.User;
+import com.carmichael.swip.R;
 import com.carmichael.swip.Services.FirebaseServices;
 import com.carmichael.swip.Services.ImageServices;
+import com.carmichael.swip.Services.RetrieveJsonTask;
 import com.carmichael.swip.Services.WebServices;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DataSnapshot;
@@ -90,7 +92,7 @@ public class ReviewOfferActivity extends Activity {
         tvTitle.setText(Html.fromHtml("<b>"+theirItem.getName()+"</b>" + " for " + "<b>"+myItem.getName()+"</b>"));
         tvItemName.setText(theirItem.getName());
         tvItemDescription.setText(theirItem.getDescription());
-        
+
         String location = "TradeItems/" + theirItem.getItemId();
         StorageReference ref = FirebaseServices.getStorageReference(location);
 
@@ -101,13 +103,5 @@ public class ReviewOfferActivity extends Activity {
         tvItemDescription.setVisibility(View.VISIBLE);
         imgMyItem.setVisibility(View.VISIBLE);
         btnAcceptOffer.setVisibility(View.VISIBLE);
-    }
-
-    private class RetrieveJsonTask extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            String json = WebServices.getFirebaseJson(params[0],params[1]);
-            return json;
-        }
     }
 }

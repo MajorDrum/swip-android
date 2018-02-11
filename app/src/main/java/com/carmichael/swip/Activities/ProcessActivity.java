@@ -1,4 +1,4 @@
-package com.carmichael.swip;
+package com.carmichael.swip.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -10,11 +10,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.Models.User;
+import com.carmichael.swip.R;
 import com.carmichael.swip.Services.ImageServices;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -116,8 +115,8 @@ public class ProcessActivity extends AppCompatActivity {
 
     public void BeginActivity(){
 
-        Log.d(TAG, "BeginActivity: theirItem is: " + theirItem.toString());
-        Log.d(TAG, "BeginActivity: myItem is: " + myItem.toString());
+        Log.d(TAG, "beginActivity: theirItem is: " + theirItem.toString());
+        Log.d(TAG, "beginActivity: myItem is: " + myItem.toString());
 
         tvTitle.setText(Html.fromHtml("<b>"+theirItem.getName()+"</b>" + " for " + "<b>"+myItem.getName()+"</b>"));
         tvPhoneNumber.setText(otherUser.getPhone());

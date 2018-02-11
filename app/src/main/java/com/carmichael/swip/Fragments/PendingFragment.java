@@ -96,7 +96,7 @@ public class PendingFragment extends Fragment {
                 user = dataSnapshot.getValue(User.class);
                 userReady = true;
                 if(userReady && itemsReady){
-                    BeginActivity();
+                    beginActivity();
                 }
             }
 
@@ -124,7 +124,7 @@ public class PendingFragment extends Fragment {
                 }
                 itemsReady = true;
                 if(userReady && itemsReady){
-                    BeginActivity();
+                    beginActivity();
                 }
             }
 
@@ -135,19 +135,16 @@ public class PendingFragment extends Fragment {
         });
     }
 
-    public void BeginActivity(){
+    public void beginActivity(){
 
         user.setMyItems(myItems);
 
-        Log.d(TAG, "BeginActivity: my item is: " + user.getMyItems().get(iCurrentTradeItem).toString());
+        Log.d(TAG, "beginActivity: my item is: " + user.getMyItems().get(iCurrentTradeItem).toString());
 
         pendingAdapter = new PendingAdapter(user.getMyItems().get(iCurrentTradeItem), getActivity());
 
         tvNoOfferMessage = (TextView) view.findViewById(R.id.tvNoOfferMessage);
         tvNoOfferMessage.setVisibility(View.GONE);
-
-
-
         btnReturnToTrade = (Button) view.findViewById(R.id.btnReturnToTrade);
         btnReturnToTrade.setVisibility(View.GONE);
 
@@ -173,7 +170,7 @@ public class PendingFragment extends Fragment {
 //        if(user.getMyItems().get(iCurrentTradeItem)
 //                .getHashMapKeysAsStrings(user.getMyItems()
 //                        .get(iCurrentTradeItem).getPending()).size() > 0){
-//            Log.d(TAG, "BeginActivity: adapter set");
+//            Log.d(TAG, "beginActivity: adapter set");
 //            rvPending.setAdapter(pendingAdapter);
 //        }
 

@@ -15,10 +15,11 @@ import android.widget.TextView;
 import com.carmichael.swip.Contracts.APIContract;
 import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.Models.User;
-import com.carmichael.swip.ReviewOfferActivity;
+import com.carmichael.swip.Activities.ReviewOfferActivity;
 import com.carmichael.swip.R;
 import com.carmichael.swip.Services.FirebaseServices;
 import com.carmichael.swip.Services.ImageServices;
+import com.carmichael.swip.Services.RetrieveJsonTask;
 import com.carmichael.swip.Services.WebServices;
 import com.google.firebase.storage.StorageReference;
 
@@ -98,14 +99,6 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder>{
             offerLayout = (LinearLayout) offerView.findViewById(R.id.offer_layout);
         }
 
-    }
-}
-
-class RetrieveJsonTask extends AsyncTask<String, String, String> {
-    @Override
-    protected String doInBackground(String... params) {
-        String json = WebServices.getFirebaseJson(params[0],params[1]);
-        return json;
     }
 }
 

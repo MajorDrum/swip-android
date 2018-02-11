@@ -1,4 +1,4 @@
-package com.carmichael.swip;
+package com.carmichael.swip.Activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.carmichael.swip.Models.TradeItem;
+import com.carmichael.swip.R;
 import com.carmichael.swip.Services.ImageServices;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DataSnapshot;

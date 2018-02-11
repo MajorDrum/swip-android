@@ -1,4 +1,4 @@
-package com.carmichael.swip;
+package com.carmichael.swip.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,8 +31,10 @@ import com.carmichael.swip.Adapters.TradeItemAdapter;
 import com.carmichael.swip.Contracts.APIContract;
 import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.Models.User;
+import com.carmichael.swip.R;
 import com.carmichael.swip.Services.FirebaseServices;
 import com.carmichael.swip.Services.ImageServices;
+import com.carmichael.swip.Services.RetrieveJsonTask;
 import com.carmichael.swip.Services.WebServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -103,7 +105,6 @@ public class TradeActivity extends AppCompatActivity {
                     json = new RetrieveJsonTask().execute(APIContract.URL_DATABASE_TRADEITEMS,token).get();
                     tradeItems = FirebaseServices.convertTradeItemJsonToArray(json);
 
-                    Log.d(TAG, "onComplete: new tradeItems:" + tradeItems.toString());
                     // Load items into user
                     for(TradeItem tradeItem : tradeItems){
                         if (tradeItem.getUserId().equals(user.getFirebase().getUid())){
@@ -111,21 +112,12 @@ public class TradeActivity extends AppCompatActivity {
                         }
                     }
 
-                    Log.d(TAG, "onComplete: test item: " + myItems.get(0).toString());
                     beginTrading();
                 }catch(Exception e){
                     Log.e(TAG, "onComplete: TestActivity could not retrieve JSON",e);
                 }
             }
         });
-    }
-
-    private class RetrieveJsonTask extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            String json = WebServices.getFirebaseJson(params[0],params[1]);
-            return json;
-        }
     }
 
     public void beginTrading(){

@@ -12,12 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-import com.bumptech.glide.Glide;
 import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.R;
 import com.carmichael.swip.Services.ImageServices;
-import com.carmichael.swip.ViewPendingActivity;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.carmichael.swip.Activities.ViewPendingActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.Models.User;
-import com.carmichael.swip.ProcessActivity;
+import com.carmichael.swip.Activities.ProcessActivity;
 import com.carmichael.swip.R;
 import com.carmichael.swip.Services.ImageServices;
 import com.google.firebase.auth.FirebaseAuth;

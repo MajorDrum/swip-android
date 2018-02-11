@@ -20,15 +20,8 @@ import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.Models.User;
 import com.carmichael.swip.R;
 import com.carmichael.swip.Services.FirebaseServices;
+import com.carmichael.swip.Services.RetrieveJsonTask;
 import com.carmichael.swip.Services.WebServices;
-import com.carmichael.swip.TradeActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -114,13 +107,5 @@ public class OffersFragment extends Fragment {
         tvYourOffers.setText("Trade your "+
                 user.getMyItems().get(iItem).getName()+" for:");
 
-    }
-
-    private class RetrieveJsonTask extends AsyncTask<String, String, String>{
-        @Override
-        protected String doInBackground(String... params) {
-            String json = WebServices.getFirebaseJson(params[0],params[1]);
-            return json;
-        }
     }
 }
