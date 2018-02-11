@@ -1,6 +1,7 @@
 package com.carmichael.swip.Services;
 
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.amazonaws.http.HttpResponse;
@@ -17,6 +18,7 @@ import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
  */
 
 public class WebServices {
+
     public static String getFirebaseJson(String urlSnippet, String token){
         String json = null;
         try{
@@ -25,8 +27,6 @@ public class WebServices {
             URL url = new URL(urlSnippet);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
-//            urlConnection.setRequestProperty("Bearer", token);
-//            urlConnection.setRequestProperty("Content-type", "application/json");
             urlConnection.setReadTimeout(10000 /* milliseconds */ );
             urlConnection.setConnectTimeout(15000 /* milliseconds */ );
             urlConnection.setDoOutput(true);

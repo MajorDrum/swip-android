@@ -101,15 +101,17 @@ public class TradeActivity extends AppCompatActivity {
 
                     // Get ALL TradeItems
                     json = new RetrieveJsonTask().execute(APIContract.URL_DATABASE_TRADEITEMS,token).get();
+                    tradeItems = FirebaseServices.convertTradeItemJsonToArray(json);
 
-                    tradeItems = FirebaseServices.convertTradeItemJsonToArray(tradeItems,json);
-
+                    Log.d(TAG, "onComplete: new tradeItems:" + tradeItems.toString());
                     // Load items into user
                     for(TradeItem tradeItem : tradeItems){
                         if (tradeItem.getUserId().equals(user.getFirebase().getUid())){
                             myItems.add(tradeItem);
                         }
                     }
+
+                    Log.d(TAG, "onComplete: test item: " + myItems.get(0).toString());
                     beginTrading();
                 }catch(Exception e){
                     Log.e(TAG, "onComplete: TestActivity could not retrieve JSON",e);

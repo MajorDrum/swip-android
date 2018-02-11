@@ -1,5 +1,6 @@
 package com.carmichael.swip.Fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,9 +15,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carmichael.swip.Adapters.MatchAdapter;
+import com.carmichael.swip.Contracts.APIContract;
 import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.Models.User;
 import com.carmichael.swip.R;
+import com.carmichael.swip.Services.FirebaseServices;
+import com.carmichael.swip.Services.WebServices;
+import com.carmichael.swip.TradeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,20 +39,16 @@ import java.util.ArrayList;
 public class OffersFragment extends Fragment {
 
     private static final String TAG = "OffersFragment";
-    User user;
-    MatchAdapter matchAdapter;
-    ArrayList<TradeItem> tradeItems;
-    RecyclerView rvOffers;
-    TextView tvNoOfferMessage;
-    Button btnReturnToTrade;
-    TextView tvPoints;
-    TextView tvYourOffers;
-    boolean itemsReady = false;
-    boolean userReady = false;
-    FirebaseUser fUser;
+    private User user;
+    private MatchAdapter matchAdapter;
+    private ArrayList<TradeItem> tradeItems;
+    private RecyclerView rvOffers;
+    private TextView tvNoOfferMessage;
+    private Button btnReturnToTrade;
+    private TextView tvPoints;
+    private TextView tvYourOffers;
     private int iItem = 0;
     private View view;
-    private ArrayList<TradeItem> myItems;
 
     @Nullable
     @Override
@@ -58,7 +59,6 @@ public class OffersFragment extends Fragment {
 
     public static OffersFragment newInstance(int exampleInt, User user) {
         OffersFragment fragment = new OffersFragment();
-
         Bundle args = new Bundle();
         args.putInt("iItem", exampleInt);
         args.putParcelable("User",user);
@@ -73,121 +73,54 @@ public class OffersFragment extends Fragment {
         iItem = getArguments().getInt("iItem");
         user = getArguments().getParcelable("User");
 
-        Log.d(TAG, "onActivityCreated: second attempt at user: " + user.toString());
-
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
-
-        tradeItems = new ArrayList<>();
-
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        mDatabase = database.getReference();
-        DatabaseReference itemRef = mDatabase.child("TradeItems");
-
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
-        fUser = mAuth.getCurrentUser();
-
-        final DatabaseReference userRef = mDatabase.child("Users").child(fUser.getUid());
-
-
-
-
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                user = dataSnapshot.getValue(User.class);
-                userReady = true;
-                user = getArguments().getParcelable("User");
-                if(userReady && itemsReady){
-                    BeginActivity();
+        // Get ALL TradeItems and add them to user's items if match
+        try{
+            String json = new RetrieveJsonTask().execute(APIContract.URL_DATABASE_TRADEITEMS,user.getToken()).get();
+            tradeItems = FirebaseServices.convertTradeItemJsonToArray(json);
+            ArrayList<TradeItem> myItems = new ArrayList<>();
+            for(TradeItem tradeItem : tradeItems){
+                if(tradeItem.getUserId().equals(user.getUserId())){
+                    myItems.add(tradeItem);
                 }
             }
+            user.setMyItems(myItems);
+        }catch(Exception e){
+            Log.e(TAG, "onActivityCreated: could not return all tradeItems", e);
+        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        tradeItems = new ArrayList<>();
-        myItems = new ArrayList<>();
-
-        itemRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                    TradeItem test = postSnapshot.getValue(TradeItem.class);
-                    Log.d(TAG, "onDataChange: offers items are: " + test.toString());
-                    test.setItemId(postSnapshot.getKey());
-                    if(test.getUserId().equals(fUser.getUid())){
-                        myItems.add(test);
-                    }else{
-                        tradeItems.add(test);
-                    }
-                }
-                itemsReady = true;
-                if(userReady && itemsReady){
-                    BeginActivity();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        beginActivity();
     }
 
-    public void BeginActivity(){
-
-        Log.d(TAG, "onActivityCreated: bundle user is: " + user.toString());
-        user.setMyItems(myItems);
-
-        Log.d(TAG, "BeginActivity: my item is: " + user.getMyItems().get(iItem).toString());
-
+    public void beginActivity(){
         matchAdapter = new MatchAdapter(user.getMyItems().get(iItem), getActivity(), user);
-
         tvNoOfferMessage = (TextView) view.findViewById(R.id.tvNoOfferMessage);
         tvNoOfferMessage.setVisibility(View.GONE);
-
         btnReturnToTrade = (Button) view.findViewById(R.id.btnReturnToTrade);
         btnReturnToTrade.setVisibility(View.GONE);
-
         tvPoints = (TextView) view.findViewById(R.id.tvPoints);
         tvPoints.setText(Html.fromHtml("Your points: <b>" + user.getPoints() + "</b>"));
-
         tvYourOffers = (TextView) view.findViewById(R.id.tvYourOffers);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-
-        rvOffers = (RecyclerView) view.findViewById(R.id.rvOffers);
-        rvOffers.setLayoutManager(linearLayoutManager);
-
         rvOffers = (RecyclerView) view.findViewById(R.id.rvOffers);
         rvOffers.setLayoutManager(linearLayoutManager);
         if(user.getMyItems().get(iItem)
                 .getHashMapKeysAsStrings(user.getMyItems()
                         .get(iItem).getOffers()).size() > 0){
+            Log.d(TAG, "beginActivity: item greater than zero");
             rvOffers.setAdapter(matchAdapter);
         }
-
         tvYourOffers = (TextView) view.findViewById(R.id.tvYourOffers);
         tvYourOffers.setText("Trade your "+
                 user.getMyItems().get(iItem).getName()+" for:");
 
+    }
 
-
-//        if(user.getMyOffers().size() == 0){
-//            tvYourOffers.setVisibility(View.GONE);
-//            rvPending.setVisibility(View.GONE);
-//            tvNoOfferMessage.setVisibility(View.VISIBLE);
-//            btnReturnToTrade.setVisibility(View.VISIBLE);
-//            tvNoOfferMessage.setText(Html.fromHtml("You have no offers for your current " +
-//                    "item: <b>" + user.getMyItems().get(0).getName() + "</b>.")); // Temporary
-//        }
+    private class RetrieveJsonTask extends AsyncTask<String, String, String>{
+        @Override
+        protected String doInBackground(String... params) {
+            String json = WebServices.getFirebaseJson(params[0],params[1]);
+            return json;
+        }
     }
 }

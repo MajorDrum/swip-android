@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.Models.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -22,10 +24,17 @@ import java.util.List;
 public class FirebaseServices {
     private static final String TAG = "FirebaseServices";
 
-    public static TradeItem convertJsonToTradeItem(TradeItem tradeItem, String json, String itemKey){
+    public static StorageReference getStorageReference(String location){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference ref = storageRef.child(location);
+        return ref;
+    }
+
+    public static TradeItem convertJsonToTradeItem(String json, String itemKey){
+        TradeItem tradeItem = new TradeItem();
         try{
             Gson gson = new Gson();
-            JSONObject jsonObject = new JSONObject(json);
             tradeItem = gson.fromJson(json,TradeItem.class);
             tradeItem.setItemId(itemKey);
         }catch(Exception e){
@@ -34,7 +43,9 @@ public class FirebaseServices {
         return tradeItem;
     }
 
-    public static ArrayList<TradeItem> convertTradeItemJsonToArray(ArrayList<TradeItem> tradeItems, String json){
+    public static ArrayList<TradeItem> convertTradeItemJsonToArray(String json){
+        ArrayList<TradeItem> tradeItems = new ArrayList<>();
+
         try{
             Gson gson = new Gson();
             JSONObject jsonObject = new JSONObject(json);
@@ -54,7 +65,8 @@ public class FirebaseServices {
         return tradeItems;
     }
 
-    public static ArrayList<User> convertUserJsonToArray(ArrayList<User> users, String json){
+    public static ArrayList<User> convertUserJsonToArray(String json){
+        ArrayList<User> users = new ArrayList<>();
         try{
             Gson gson = new Gson();
             JSONObject jsonObject = new JSONObject(json);

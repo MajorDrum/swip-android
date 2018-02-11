@@ -63,8 +63,11 @@ public class ReviewOfferActivity extends Activity {
             Log.e(TAG, "onCreate: unable to retrieve json", e);
         }
 
-        myItem = FirebaseServices.convertJsonToTradeItem(myItem, myJson, myItemKey);
-        theirItem = FirebaseServices.convertJsonToTradeItem(theirItem,theirJson,theirItemKey);
+        myItem = FirebaseServices.convertJsonToTradeItem(myJson, myItemKey);
+        theirItem = FirebaseServices.convertJsonToTradeItem(theirJson,theirItemKey);
+
+        Log.d(TAG, "onCreate: item test 1: " + myItem.toString());
+        Log.d(TAG, "onCreate: item test 2: " + myItem.toString());
 
         beginActivity();
     }
@@ -87,11 +90,9 @@ public class ReviewOfferActivity extends Activity {
         tvTitle.setText(Html.fromHtml("<b>"+theirItem.getName()+"</b>" + " for " + "<b>"+myItem.getName()+"</b>"));
         tvItemName.setText(theirItem.getName());
         tvItemDescription.setText(theirItem.getDescription());
-
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
+        
         String location = "TradeItems/" + theirItem.getItemId();
-        StorageReference ref = storageRef.child(location);
+        StorageReference ref = FirebaseServices.getStorageReference(location);
 
         ImageServices.setImageWithGlide(this,ref,imgMyItem);
 

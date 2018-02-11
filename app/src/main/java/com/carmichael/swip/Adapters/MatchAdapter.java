@@ -2,6 +2,7 @@ package com.carmichael.swip.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,20 +12,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import com.bumptech.glide.Glide;
+import com.carmichael.swip.Contracts.APIContract;
 import com.carmichael.swip.Models.TradeItem;
 import com.carmichael.swip.Models.User;
 import com.carmichael.swip.ReviewOfferActivity;
 import com.carmichael.swip.R;
+import com.carmichael.swip.Services.FirebaseServices;
 import com.carmichael.swip.Services.ImageServices;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
+import com.carmichael.swip.Services.WebServices;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -37,7 +32,6 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder>{
 
     private static final String TAG = "MatchAdapter";
     private TradeItem tradeItem;
-    private ViewHolder viewHolder;
     private Context context;
     private TradeItem currentItem;
     private ArrayList<TradeItem> matchItems = new ArrayList<>();
@@ -57,61 +51,34 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder>{
         return vh;
     }
 
-
-
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference mDatabase = database.getReference();
-        String key = tradeItem.getHashMapKeysAsStrings(tradeItem.getMatches()).get(position);
-        final DatabaseReference itemRef = mDatabase.child("TradeItems").child(key);
+        String key = tradeItem.getHashMapKeysAsStrings(tradeItem.getOffers()).get(position);
+        RetrieveJsonTask retrieveJsonTask = new RetrieveJsonTask();
+        try{
+            String json = retrieveJsonTask.execute(APIContract.URL_DATABASE_TRADEITEMS+key,user.getToken()).get();
+            currentItem = FirebaseServices.convertJsonToTradeItem(json,key);
+        }catch(Exception e){
+            Log.e(TAG, "onBindViewHolder: could not retrieve json", e);
+        }
 
-        itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                currentItem = dataSnapshot.getValue(TradeItem.class);
-                if(currentItem != null){
-                    currentItem.setItemId(dataSnapshot.getKey());
-                    holder.tvOfferItemName.setText(currentItem.getName());
-
-                    matchItems.add(currentItem);
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
-                    String location = "TradeItems/" + currentItem.getItemId();
-                    StorageReference ref = storageRef.child(location);
-                    Log.d(TAG, "onClick: item id is: " + currentItem.getItemId());
-
-                    ImageServices.setImageWithGlide(context,ref,holder.imgOfferItem);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
+        holder.tvOfferItemName.setText(currentItem.getName());
+        matchItems.add(currentItem);
+        String location = "TradeItems/" + currentItem.getItemId();
+        StorageReference ref = FirebaseServices.getStorageReference(location);
+        ImageServices.setImageWithGlide(context,ref,holder.imgOfferItem);
 
         holder.offerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: position is: " + position);
-
-                Intent intent = new Intent(context, ReviewOfferActivity.class);
-                intent.putExtra("TheirItemKey", matchItems.get(position).getItemId());
-                intent.putExtra("MyItemKey", tradeItem.getItemId());
-                Log.d(TAG, "onClick: user on press is: " + user.toString());
-                intent.putExtra("User",user);
-                context.startActivity(intent);
+            Intent intent = new Intent(context, ReviewOfferActivity.class);
+            intent.putExtra("TheirItemKey", matchItems.get(position).getItemId());
+            intent.putExtra("MyItemKey", tradeItem.getItemId());
+            intent.putExtra("User",user);
+            context.startActivity(intent);
             }
         });
-
-
     }
-
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-    }
-
 
     @Override
     public int getItemCount() {
@@ -131,6 +98,14 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder>{
             offerLayout = (LinearLayout) offerView.findViewById(R.id.offer_layout);
         }
 
+    }
+}
+
+class RetrieveJsonTask extends AsyncTask<String, String, String> {
+    @Override
+    protected String doInBackground(String... params) {
+        String json = WebServices.getFirebaseJson(params[0],params[1]);
+        return json;
     }
 }
 
